@@ -7,7 +7,7 @@ On a held-out month (August 2026) the model reduces forecast error by **28.5% (1
 compared with the strongest simple baseline, *same hour last week*. It also produces calibrated 80% prediction intervals
 and was used in a simulated driver-allocation study.
 
-**Live app:** `<add your Streamlit link here>`  |  **Notebook:** `notebooks/uber_demand_forecasting.ipynb`
+**Live app:** `https://uber-hourly-demand-forecasting-using-light-gbm.streamlit.app/`  |  **Notebook:** `notebooks/uber_demand_forecasting.ipynb`
 
 ## Results at a glance (August 2026, held-out test month)
 
