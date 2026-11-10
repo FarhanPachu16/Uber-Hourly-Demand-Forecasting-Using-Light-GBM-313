@@ -7,7 +7,7 @@ On a held-out month (August 2026) the model reduces forecast error by **28.5% (1
 compared with the strongest simple baseline, *same hour last week*. It also produces calibrated 80% prediction intervals
 and was used in a simulated driver-allocation study.
 
-**Live app:** `https://uber-hourly-demand-forecasting-using-light-gbm.streamlit.app/`  |  **Notebook:** `notebooks/uber_demand_forecasting.ipynb`
+**Live app:** [uber-hourly-demand-forecasting-using-light-gbm.streamlit.app](https://uber-hourly-demand-forecasting-using-light-gbm.streamlit.app/)  |  **Notebook:** `notebooks/uber_demand_forecasting.ipynb`  |  **Data preparation:** `prepare_data.py`
 
 ## Results at a glance (August 2026, held-out test month)
 
@@ -115,12 +115,15 @@ In each hour, assume the city has as many available drivers as there were trips 
 ├── README.md
 ├── app.py                 # Streamlit app
 ├── forecast_utils.py      # data loading and metrics used by the app
-├── requirements.txt
+├── requirements.txt       # packages the app needs
+├── prepare_data.py        # downloads the TLC files and builds the hourly-by-zone table (DuckDB)
+├── requirements-pipeline.txt   # packages for prepare_data.py and the notebook
 ├── data/
 │   ├── august_forecasts_h1.parquet    # 1-hour-ahead forecasts, intervals, baseline for August
 │   └── august_forecasts_h24.parquet   # 24-hour-ahead
 └── notebooks/
-    └── uber_demand_forecasting.ipynb  # aggregation, features, validation, test, simulation
+    └── uber_demand_forecasting.ipynb  # features, models, validation, August test, simulation
+                                       # (starts from the table that prepare_data.py writes)
 ```
 
 Run the app locally:
@@ -132,10 +135,9 @@ streamlit run app.py
 
 ## Reproducing from raw data
 
-1. Download the monthly `fhvhv_tripdata_2026-MM.parquet` files and `taxi_zone_lookup.csv` from the TLC page above.
-2. Aggregate each month to hourly Uber trips per pickup zone with DuckDB (one `GROUP BY` query per file).
-3. Join the months, add zero-trip zone-hours, attach zone names.
-4. Build features, train on January to June, validate on July, test on August (notebook).
+1. `pip install -r requirements-pipeline.txt`
+2. `python prepare_data.py` downloads the monthly `fhvhv_tripdata_2026-MM.parquet` files and `taxi_zone_lookup.csv` from the TLC (one file at a time, about 0.5 GB each, deleted after use), aggregates each month to hourly Uber trips per pickup zone with DuckDB, adds zero-trip zone-hours, attaches zone names, and writes `uber_hourly_full.parquet`.
+3. Open `notebooks/uber_demand_forecasting.ipynb`, make sure its first cell can find `uber_hourly_full.parquet`, and run it top to bottom: features, baselines, model, validation on July, the one-time August test, the allocation simulation, and saving the forecasts used by the app.
 
 ## Credits and notes
 

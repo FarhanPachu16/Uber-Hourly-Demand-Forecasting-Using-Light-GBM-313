@@ -1,0 +1,7 @@
+duckdb
+requests
+pandas>=2.0
+pyarrow>=14
+numpy
+lightgbm
+matplotlib

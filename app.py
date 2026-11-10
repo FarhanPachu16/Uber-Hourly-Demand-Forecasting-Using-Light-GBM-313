@@ -96,8 +96,9 @@ with tab_city:
         m1, m2, m3 = st.columns(3)
         m1.metric("City-wide trips: actual", f"{snap['actual'].sum():,.0f}")
         m2.metric("City-wide trips: forecast", f"{snap['forecast'].sum():,.0f}")
-        m3.metric(f"Demand held by the forecast's top {top_n} zones", f"{fu.topn_capture(snap, top_n):.0f}%",
-                  help="Compared with the demand held by the truly busiest zones that hour (100% = perfect).")
+        m3.metric(f"Top-{top_n} zone capture", f"{fu.topn_capture(snap, top_n):.0f}%",
+                  help=f"If drivers go to the {top_n} zones with the highest forecast, the share of demand those zones "
+                       f"hold compared with the {top_n} truly busiest zones that hour (100% = perfect).")
 
         top = snap.nlargest(top_n, "forecast")
         order = list(top["zone_label"])
@@ -105,7 +106,7 @@ with tab_city:
                         var_name="series", value_name="trips")
         bars["series"] = bars["series"].map({"forecast": "Forecast", "actual": "Actual"})
         chart = alt.Chart(bars).mark_bar().encode(
-            y=alt.Y("zone_label:N", sort=order, title=None),
+            y=alt.Y("zone_label:N", sort=order, title=None, axis=alt.Axis(labelLimit=320)),
             x=alt.X("trips:Q", title="Uber trips in the hour"),
             yOffset="series:N",
             color=alt.Color("series:N", title=None,
