@@ -95,7 +95,7 @@ In each hour, assume the city has as many available drivers as there were trips 
 
 ## What validation taught me
 
-- **The July 4 weekend was the hardest stretch.** Daily WAPE on 24-hour forecasts was 18.9% (Fri 3 July), 29.9% (Sat 4 July), 22.1% (Sun 5 July) and 19.5% (Mon 6 July), against roughly 11-16% on most other days of July (the 18-19 July weekend was also higher, at 17.5% and 19.0%). The training months contain no July 4, so the model could not learn it. It also hurt the same-hour-last-week baseline, which is why the model's relative gain was larger in July (38.6% at 1 hour, 24.5% at 24 hours) than in August, the cleaner test month.
+- **The July 4 weekend was the hardest stretch.** Daily WAPE on 24-hour forecasts was 18.9% (Fri 3 July), 29.9% (Sat 4 July), 22.1% (Sun 5 July) and 19.5% (Mon 6 July), against roughly 11-16% on most other days of July (the 18-19 July weekend was also higher, at 17.5% and 19.0%). The training months contain no July 4, so the model could not learn it. It also hurt the same-hour-last-week baseline, which is why the model's relative gain was larger in July (about 38% at 1 hour, about 24% at 24 hours) than in August, the cleaner test month.
 - **Weather did not help.** Hourly ERA5 weather (temperature, precipitation, snowfall, wind) from Open-Meteo was added as features. With identical settings, 24-hour WAPE on July went from 14.95% to 15.23%, and from 16.38% to 17.89% in rainy hours (both versions stopped at the 500-round cap, with the same settings). Likely reasons (not verified): training covers only January to June, so July heat is outside the training range; one coarse grid point stands in for the whole city; and observed weather is not a forecast. Weather is not used in the final model.
 
 ## Limitations
