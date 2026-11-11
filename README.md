@@ -95,8 +95,8 @@ In each hour, assume the city has as many available drivers as there were trips 
 
 ## What validation taught me
 
-- **The July 4 weekend was the hardest stretch.** Daily WAPE on 24-hour forecasts was 18.9% (Fri 3 July), 29.9% (Sat 4 July), 22.2% (Sun 5 July) and 19.4% (Mon 6 July), against roughly 11-16% on most other days of July. The training months contain no July 4, so the model could not learn it. It also hurt the same-hour-last-week baseline, which is why the model's relative gain was larger in July (38.6% at 1 hour, 24.5% at 24 hours) than in August, the cleaner test month.
-- **Weather did not help.** Hourly ERA5 weather (temperature, precipitation, snowfall, wind) from Open-Meteo was added as features. With identical settings, 24-hour WAPE on July went from 14.93% to 15.31%, and from 16.35% to 18.17% in rainy hours. Likely reasons (not verified): training covers only January to June, so July heat is outside the training range; one coarse grid point stands in for the whole city; and observed weather is not a forecast. Weather is not used in the final model.
+- **The July 4 weekend was the hardest stretch.** Daily WAPE on 24-hour forecasts was 18.9% (Fri 3 July), 29.9% (Sat 4 July), 22.1% (Sun 5 July) and 19.5% (Mon 6 July), against roughly 11-16% on most other days of July (the 18-19 July weekend was also higher, at 17.5% and 19.0%). The training months contain no July 4, so the model could not learn it. It also hurt the same-hour-last-week baseline, which is why the model's relative gain was larger in July (38.6% at 1 hour, 24.5% at 24 hours) than in August, the cleaner test month.
+- **Weather did not help.** Hourly ERA5 weather (temperature, precipitation, snowfall, wind) from Open-Meteo was added as features. With identical settings, 24-hour WAPE on July went from 14.95% to 15.23%, and from 16.38% to 17.89% in rainy hours (both versions stopped at the 500-round cap, with the same settings). Likely reasons (not verified): training covers only January to June, so July heat is outside the training range; one coarse grid point stands in for the whole city; and observed weather is not a forecast. Weather is not used in the final model.
 
 ## Limitations
 
@@ -137,7 +137,7 @@ streamlit run app.py
 
 1. `pip install -r requirements-pipeline.txt`
 2. `python prepare_data.py` downloads the monthly `fhvhv_tripdata_2026-MM.parquet` files and `taxi_zone_lookup.csv` from the TLC (one file at a time, about 0.5 GB each, deleted after use), aggregates each month to hourly Uber trips per pickup zone with DuckDB, adds zero-trip zone-hours, attaches zone names, and writes `uber_hourly_full.parquet`.
-3. Open `notebooks/uber_demand_forecasting.ipynb`, make sure its first cell can find `uber_hourly_full.parquet`, and run it top to bottom: features, baselines, model, validation on July, the one-time August test, the allocation simulation, and saving the forecasts used by the app.
+3. Open `notebooks/uber_demand_forecasting.ipynb`. If needed, set `DATA_PATH` in the first code cell to where `uber_hourly_full.parquet` is. Run it top to bottom with `H = 1`, then again with `H = 24`. It covers features, baselines, the model, validation on July, the one-time August test, the allocation simulation, saving the forecasts used by the app, and (as an appendix) the weather experiment.
 
 ## Credits and notes
 
